@@ -29,6 +29,13 @@ def test_create_and_get(client):
     assert resp.get_json() == item
 
 
+def test_create_dedupes_tags(client):
+    resp = client.post("/items", json={"title": "Buy milk", "tags": ["home", "work", "home"]})
+    assert resp.status_code == 201
+    item = resp.get_json()
+    assert item["tags"] == ["home", "work"]
+
+
 def test_create_requires_title(client):
     resp = client.post("/items", json={})
     assert resp.status_code == 400
